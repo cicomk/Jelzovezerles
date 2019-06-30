@@ -3,8 +3,8 @@ int out1 = 0;  //tolatasjelzo Kek feny
 int out2 = 1;  //tolatasjelzo Feher feny
 int out3 = 2;  //nembiztositott Zold feny
 int out4 = 3;  //nembiztositott Sarga feny
-int out5 = 4;
-int out6 = 5;
+int out5 = 4;  //Feher + sarga feny
+int out6 = 5;  //Feher + zold feny
 int out7 = 6;
 int out8 = 7;
 int out9 = 8;
@@ -17,7 +17,7 @@ int out14 = 13;
 //In
 int in1 = A0; //Tolatasjelzo
 int in2 = A1; //Nembiztositott
-int in3 = A2;
+int in3 = A2; //Ismetlojelzo
 int in4 = A3;
 int in5 = A4;
 
@@ -34,8 +34,12 @@ int value1;
 byte value1last = 1;
 int value2;
 byte value2last = 1;
+int value3;
+byte value3last = 1;
 void setup() {
   //digitalWrite(out1, HIGH);
+  digitalWrite(out3, HIGH);
+  digitalWrite(out5, HIGH);
   
   Serial.begin(9600);
   pinMode(out1, OUTPUT);
@@ -93,6 +97,25 @@ void nembiztositott() {
      digitalWrite(out3, LOW); //Zold le
      digitalWrite(out4, HIGH); //Sarga fel
     value2last= 0;
+     delay(30);
+  }
+//Serial.println(value2);
+}
+
+void ismetlojelzo() {
+  value3 = analogRead(in3);
+
+  if ((value3==0) && (value3last==0)){ 
+    digitalWrite(out5, HIGH); //Feher + sarga fel
+    digitalWrite(out6, LOW); //Feher + zold le
+    value3last= 1;
+    delay(30);
+  }
+
+  if ((value3>=511 && value3<520) && (value3last==1)){
+     digitalWrite(out5, LOW); //Feher + sarga le
+     digitalWrite(out6, HIGH); //Feher + zold fel
+    value3last= 0;
      delay(30);
   }
 //Serial.println(value2);
